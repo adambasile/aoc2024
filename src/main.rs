@@ -28,3 +28,11 @@ fn read_lines_from_file(path: PathBuf) -> Vec<String> {
         .collect();
     lines
 }
+
+fn read_testfile(testfile: &str) -> Vec<String> {
+    let filename = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("inputs")
+        .join(testfile);
+    let lines = read_lines_from_file(filename);
+    lines
+}
