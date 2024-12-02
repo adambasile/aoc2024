@@ -1,4 +1,5 @@
 mod day01;
+mod day02;
 
 use clap::Parser;
 use std::fs::File;
@@ -16,6 +17,7 @@ fn main() {
     let lines = read_lines_from_file(args.path);
     match args.day {
         1 => println!("{:?}", day01::day01(lines)),
+        2 => println!("{:?}", day02::day02(lines)),
         _ => panic!(),
     }
 }
