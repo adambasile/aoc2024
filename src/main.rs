@@ -1,5 +1,6 @@
 mod day01;
 mod day02;
+mod day03;
 
 use clap::Parser;
 use std::fs::File;
@@ -18,6 +19,7 @@ fn main() {
     match args.day {
         1 => println!("{:?}", day01::day01(lines)),
         2 => println!("{:?}", day02::day02(lines)),
+        3 => println!("{:?}", day03::day03(lines)),
         _ => panic!(),
     }
 }
@@ -31,6 +33,7 @@ fn read_lines_from_file(path: PathBuf) -> Vec<String> {
     lines
 }
 
+#[allow(unused)]
 fn read_testfile(testfile: &str) -> Vec<String> {
     let filename = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("inputs")
