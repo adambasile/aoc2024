@@ -65,15 +65,14 @@ fn create_candidates(lines: &Vec<String>) -> Vec<String> {
         candidates.push(cand);
     }
 
-    // bottom-left to top-right
     let height = lines.len() as i32;
     let width = lines[0].len() as i32;
     let num_diagonals = height + width - 1;
+    // bottom-left to top-right
     for diagonal in 1..=num_diagonals {
         let mut cand = String::new();
         let rows = (0..diagonal).rev();
         let cols = 0..diagonal;
-        // println!("diagonal {:?}", diagonal);
         for (row, col) in rows.zip(cols) {
             if row >= height || col >= width {
                 continue;
@@ -82,6 +81,7 @@ fn create_candidates(lines: &Vec<String>) -> Vec<String> {
         }
         candidates.push(cand);
     }
+    // top-left to bottom-right
     for diagonal in 1..=num_diagonals {
         let mut cand = String::new();
         let rows = (height - diagonal)..height;
