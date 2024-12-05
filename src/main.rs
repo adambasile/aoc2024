@@ -1,6 +1,7 @@
 mod day01;
 mod day02;
 mod day03;
+mod day04;
 
 use clap::Parser;
 use std::fs::File;
@@ -16,12 +17,14 @@ struct Cli {
 fn main() {
     let args: Cli = Cli::parse();
     let lines = read_lines_from_file(args.path);
-    match args.day {
-        1 => println!("{:?}", day01::day01(lines)),
-        2 => println!("{:?}", day02::day02(lines)),
-        3 => println!("{:?}", day03::day03(lines)),
+    let day = match args.day {
+        1 => day01::day01,
+        2 => day02::day02,
+        3 => day03::day03,
+        4 => day04::day04,
         _ => panic!(),
-    }
+    };
+    println!("{:?}", day(lines))
 }
 
 fn read_lines_from_file(path: PathBuf) -> Vec<String> {
