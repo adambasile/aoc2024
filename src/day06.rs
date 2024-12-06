@@ -88,21 +88,20 @@ impl Area {
         if self.guard_trail.contains(&self.guard) {
             return GuardStatus::Trapped;
         }
-        self.guard_trail.insert(self.guard.clone());
         let next_position = self.guard.next_position();
+        if self.obstructions.contains(&next_position) {
+            self.guard.rotate();
+            return self.move_guard();
+        }
+        self.guard_trail.insert(self.guard.clone());
+        self.guard_visited.insert(self.guard.pos);
         if next_position.x >= self.width
             || next_position.y >= self.height
             || next_position.x < 0
             || next_position.y < 0
         {
-            self.guard_visited.insert(self.guard.pos);
             return GuardStatus::Left;
         }
-        if self.obstructions.contains(&next_position) {
-            self.guard.rotate();
-            return self.move_guard();
-        }
-        self.guard_visited.insert(self.guard.pos);
         self.guard.pos = next_position;
         GuardStatus::Moved
     }
