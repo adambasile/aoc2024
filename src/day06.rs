@@ -95,15 +95,18 @@ impl Area {
         }
         self.guard_trail.insert(self.guard.clone());
         self.guard_visited.insert(self.guard.pos);
-        if next_position.x >= self.width
-            || next_position.y >= self.height
-            || next_position.x < 0
-            || next_position.y < 0
-        {
+        if !self.within_bounds(next_position) {
             return GuardStatus::Left;
         }
         self.guard.pos = next_position;
         GuardStatus::Moved
+    }
+
+    fn within_bounds(&self, next_position: Position) -> bool {
+        next_position.x < self.width
+            && next_position.y < self.height
+            && next_position.x >= 0
+            && next_position.y >= 0
     }
 
     fn patrol(&mut self) -> PatrolStatus {
