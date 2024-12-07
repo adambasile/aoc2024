@@ -13,7 +13,7 @@ use std::path::PathBuf;
 
 #[derive(Parser)]
 struct Cli {
-    day: i32,
+    day: i64,
     path: PathBuf,
 }
 
@@ -27,6 +27,7 @@ fn main() {
         4 => day04::day04,
         5 => day05::day05,
         6 => day06::day06,
+        7 => day07::day07,
         _ => panic!(),
     };
     println!("{:?}", day(lines))

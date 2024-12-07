@@ -18,13 +18,19 @@ impl From<&String> for Equation {
 enum Operator {
     Add,
     Multiply,
+    Concatenate,
 }
 
-fn combinations(n: usize) -> Vec<Vec<Operator>> {
+fn combinations(n: usize, with_concatenation: bool) -> Vec<Vec<Operator>> {
     let mut out = vec![Vec::new()];
+    let operators = match with_concatenation {
+        true => vec![Operator::Add, Operator::Multiply, Operator::Concatenate],
+        false => vec![Operator::Add, Operator::Multiply],
+    };
+
     for _ in 0..n {
         let mut new_out = Vec::new();
-        for op in [Operator::Add, Operator::Multiply] {
+        for &op in operators.iter() {
             for old in out.iter() {
                 let mut new = old.clone();
                 new.push(op);
@@ -37,8 +43,8 @@ fn combinations(n: usize) -> Vec<Vec<Operator>> {
 }
 
 impl Equation {
-    fn possible(&self) -> bool {
-        let combinations = combinations(self.rhs.len() - 1);
+    fn possible(&self, with_concatenation: bool) -> bool {
+        let combinations = combinations(self.rhs.len() - 1, with_concatenation);
         combinations.iter().any(|combination| {
             [Operator::Add]
                 .iter()
@@ -47,6 +53,7 @@ impl Equation {
                 .fold(0, |acc, (op, val)| match op {
                     Operator::Add => acc + val,
                     Operator::Multiply => acc * val,
+                    Operator::Concatenate => format!("{}{}", acc, val).parse().unwrap(),
                 })
                 == self.lhs
         })
@@ -54,13 +61,17 @@ impl Equation {
 }
 
 pub(crate) fn day07(lines: Vec<String>) -> (i64, i64) {
-    let p1_equations: Vec<Equation> = lines.iter().map(|s| s.into()).collect();
-    let partone = (&p1_equations)
+    let equations: Vec<Equation> = lines.iter().map(|s| s.into()).collect();
+    let partone = (&equations)
         .iter()
-        .filter(|e| e.possible())
+        .filter(|e| e.possible(false))
         .map(|e| e.lhs)
         .sum();
-    let parttwo = 0;
+    let parttwo = (&equations)
+        .iter()
+        .filter(|e| e.possible(true))
+        .map(|e| e.lhs)
+        .sum();
     (partone, parttwo)
 }
 
@@ -73,12 +84,12 @@ mod tests {
     #[test]
     fn test_day_07_small() {
         let lines = read_testfile("day07test.txt");
-        assert_eq!(day07(lines), (3749, 0));
+        assert_eq!(day07(lines), (3749, 11387));
     }
 
     #[test]
     fn test_day_07() {
         let lines = read_testfile("day07.txt");
-        assert_eq!(day07(lines), (1298103531759, 0));
+        assert_eq!(day07(lines), (1298103531759, 140575048428831));
     }
 }

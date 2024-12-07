@@ -1,18 +1,18 @@
-pub(crate) fn day02(lines: Vec<String>) -> (i32, i32) {
-    let parsed: Vec<Vec<i32>> = lines
+pub(crate) fn day02(lines: Vec<String>) -> (i64, i64) {
+    let parsed: Vec<Vec<i64>> = lines
         .iter()
         .map(|l| {
             l.split_whitespace()
-                .map(|s| s.parse::<i32>().unwrap())
+                .map(|s| s.parse::<i64>().unwrap())
                 .collect()
         })
         .collect();
-    let partone = parsed.iter().filter(|&l| is_safe(l)).count() as i32;
-    let parttwo = parsed.iter().filter(|&l| is_safe_with_dampener(l)).count() as i32;
+    let partone = parsed.iter().filter(|&l| is_safe(l)).count() as i64;
+    let parttwo = parsed.iter().filter(|&l| is_safe_with_dampener(l)).count() as i64;
     (partone, parttwo)
 }
 
-fn is_safe(level: &Vec<i32>) -> bool {
+fn is_safe(level: &Vec<i64>) -> bool {
     let pairwise: Vec<_> = level.iter().zip(level.iter().skip(1)).collect();
     let all_decreasing = pairwise.iter().all(|(&l, &r)| l > r);
     let all_increasing = pairwise.iter().all(|(&l, &r)| l < r);
@@ -22,11 +22,11 @@ fn is_safe(level: &Vec<i32>) -> bool {
     (all_decreasing || all_increasing) && small_differences
 }
 
-fn is_safe_with_dampener(level: &Vec<i32>) -> bool {
+fn is_safe_with_dampener(level: &Vec<i64>) -> bool {
     dampened_levels(level).iter().any(|l| is_safe(l))
 }
 
-fn dampened_levels(level: &Vec<i32>) -> Vec<Vec<i32>> {
+fn dampened_levels(level: &Vec<i64>) -> Vec<Vec<i64>> {
     (0..level.len())
         .map(|i| [&level[..i], &level[(i + 1)..]].concat())
         .collect()

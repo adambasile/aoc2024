@@ -1,11 +1,11 @@
 #[derive(Debug)]
 struct Rule {
-    before: i32,
-    after: i32,
+    before: i64,
+    after: i64,
 }
 
 impl Rule {
-    fn satisfied(&self, input: &Vec<i32>) -> bool {
+    fn satisfied(&self, input: &Vec<i64>) -> bool {
         match input.iter().position(|&x| x == self.after) {
             None => true,
             Some(after_position) => match input
@@ -19,7 +19,7 @@ impl Rule {
         }
     }
 
-    fn satisfy(&self, input: &Vec<i32>) -> Vec<i32> {
+    fn satisfy(&self, input: &Vec<i64>) -> Vec<i64> {
         let mut out = input.clone();
         match out.iter().position(|&x| x == self.before) {
             None => {}
@@ -36,7 +36,7 @@ impl Rule {
     }
 }
 
-pub(crate) fn day05(lines: Vec<String>) -> (i32, i32) {
+pub(crate) fn day05(lines: Vec<String>) -> (i64, i64) {
     let split_point = lines.iter().position(|l| l == "").unwrap();
     let rules_input: Vec<_> = lines[..split_point].into();
     let updates_input: Vec<_> = lines[(split_point + 1)..].into();
@@ -58,7 +58,7 @@ pub(crate) fn day05(lines: Vec<String>) -> (i32, i32) {
         })
         .collect();
 
-    let updates: Vec<Vec<i32>> = updates_input
+    let updates: Vec<Vec<i64>> = updates_input
         .iter()
         .map(|line| line.split(",").map(|i| i.parse().unwrap()).collect())
         .collect();

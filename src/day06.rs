@@ -3,8 +3,8 @@ use std::collections::HashSet;
 
 #[derive(Debug, Eq, PartialEq, Hash, Copy, Clone)]
 struct Position {
-    x: i32,
-    y: i32,
+    x: i64,
+    y: i64,
 }
 
 impl Position {
@@ -51,8 +51,8 @@ impl Guard {
 
 #[derive(Debug)]
 struct Area {
-    width: i32,
-    height: i32,
+    width: i64,
+    height: i64,
     guard: Guard,
     obstructions: HashSet<Position>,
     guard_visited: HashSet<Position>,
@@ -120,7 +120,7 @@ impl Area {
     }
 }
 
-pub(crate) fn day06(lines: Vec<String>) -> (i32, i32) {
+pub(crate) fn day06(lines: Vec<String>) -> (i64, i64) {
     let mut guards = Vec::new();
     let mut obstructions = HashSet::new();
 
@@ -129,14 +129,14 @@ pub(crate) fn day06(lines: Vec<String>) -> (i32, i32) {
             match c {
                 '#' => {
                     obstructions.insert(Position {
-                        x: x as i32,
-                        y: y as i32,
+                        x: x as i64,
+                        y: y as i64,
                     });
                 }
                 '^' => guards.push(Guard {
                     pos: Position {
-                        x: x as i32,
-                        y: y as i32,
+                        x: x as i64,
+                        y: y as i64,
                     },
                     direction: Direction::North,
                 }),
@@ -147,8 +147,8 @@ pub(crate) fn day06(lines: Vec<String>) -> (i32, i32) {
     assert_eq!(guards.len(), 1);
 
     let mut area = Area {
-        width: lines[0].len() as i32,
-        height: lines.len() as i32,
+        width: lines[0].len() as i64,
+        height: lines.len() as i64,
         guard: guards[0],
         obstructions,
         guard_visited: Default::default(),
@@ -158,7 +158,7 @@ pub(crate) fn day06(lines: Vec<String>) -> (i32, i32) {
 
     area.patrol();
 
-    let partone = area.guard_visited.len() as i32;
+    let partone = area.guard_visited.len() as i64;
 
     let mut parttwo = 0;
 

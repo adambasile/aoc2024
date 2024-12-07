@@ -1,12 +1,12 @@
 use regex::Regex;
 
-pub(crate) fn day03(lines: Vec<String>) -> (i32, i32) {
+pub(crate) fn day03(lines: Vec<String>) -> (i64, i64) {
     let partone = multiply_some_numbers(&lines, false);
     let parttwo = multiply_some_numbers(&lines, true);
     (partone, parttwo)
 }
 
-fn multiply_some_numbers(lines: &Vec<String>, sanitise: bool) -> i32 {
+fn multiply_some_numbers(lines: &Vec<String>, sanitise: bool) -> i64 {
     let command = Regex::new(r"mul\((\d+),(\d+)\)").unwrap();
     let mut combined = lines.join("_");
     if sanitise {
@@ -17,8 +17,8 @@ fn multiply_some_numbers(lines: &Vec<String>, sanitise: bool) -> i32 {
         .captures_iter(&combined)
         .map(|c| {
             (
-                (&c[1]).parse::<i32>().unwrap(),
-                (&c[2]).parse::<i32>().unwrap(),
+                (&c[1]).parse::<i64>().unwrap(),
+                (&c[2]).parse::<i64>().unwrap(),
             )
         })
         .map(|(a, b)| a * b)

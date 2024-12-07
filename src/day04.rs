@@ -1,21 +1,21 @@
 use regex::Regex;
 
-pub(crate) fn day04(lines: Vec<String>) -> (i32, i32) {
+pub(crate) fn day04(lines: Vec<String>) -> (i64, i64) {
     let re = Regex::new(r"XMAS").unwrap();
     let partone = create_candidates(&lines)
         .iter()
-        .map(|cand| re.find_iter(&cand).count() as i32)
+        .map(|cand| re.find_iter(&cand).count() as i64)
         .sum();
 
     let re_parttwo = Regex::new(r"MMSS|MSSM|SSMM|SMMS").unwrap();
     let mut parttwo = 0;
     for (row, line) in (&lines).iter().enumerate() {
-        let row = row as i32;
+        let row = row as i64;
         for (col, c) in line.chars().enumerate() {
             if c != 'A' {
                 continue;
             }
-            let col = col as i32;
+            let col = col as i64;
             let Some(top_left) = get_char(&lines, row - 1, col - 1) else {
                 continue;
             };
@@ -39,7 +39,7 @@ pub(crate) fn day04(lines: Vec<String>) -> (i32, i32) {
     (partone, parttwo)
 }
 
-fn get_char(lines: &Vec<String>, row: i32, col: i32) -> Option<char> {
+fn get_char(lines: &Vec<String>, row: i64, col: i64) -> Option<char> {
     if row < 0 || col < 0 {
         return None;
     }
@@ -65,8 +65,8 @@ fn create_candidates(lines: &Vec<String>) -> Vec<String> {
         candidates.push(cand);
     }
 
-    let height = lines.len() as i32;
-    let width = lines[0].len() as i32;
+    let height = lines.len() as i64;
+    let width = lines[0].len() as i64;
     let num_diagonals = height + width - 1;
     // bottom-left to top-right
     for diagonal in 1..=num_diagonals {
@@ -86,7 +86,7 @@ fn create_candidates(lines: &Vec<String>) -> Vec<String> {
         let mut cand = String::new();
         let rows = (height - diagonal)..height;
         for (col, row) in rows.enumerate() {
-            if row >= height || col as i32 >= width || row < 0 {
+            if row >= height || col as i64 >= width || row < 0 {
                 continue;
             }
             cand.push(lines[row as usize].chars().nth(col).unwrap());

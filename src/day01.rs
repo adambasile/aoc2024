@@ -1,15 +1,15 @@
 use std::collections::HashMap;
 
-pub(crate) fn day01(lines: Vec<String>) -> (i32, i32) {
-    let parsed_lines: Vec<(i32, i32)> = lines
+pub(crate) fn day01(lines: Vec<String>) -> (i64, i64) {
+    let parsed_lines: Vec<(i64, i64)> = lines
         .iter()
         .map(|l| {
-            let mut parsed = l.split_whitespace().map(|w| w.parse::<i32>().unwrap());
+            let mut parsed = l.split_whitespace().map(|w| w.parse::<i64>().unwrap());
             (parsed.next().unwrap(), parsed.next().unwrap())
         })
         .collect();
-    let left: Vec<i32> = parsed_lines.iter().map(|(val, _)| val.clone()).collect();
-    let right: Vec<i32> = parsed_lines.iter().map(|(_, val)| val.clone()).collect();
+    let left: Vec<i64> = parsed_lines.iter().map(|(val, _)| val.clone()).collect();
+    let right: Vec<i64> = parsed_lines.iter().map(|(_, val)| val.clone()).collect();
 
     let partone = sort(&left)
         .iter()
@@ -17,12 +17,12 @@ pub(crate) fn day01(lines: Vec<String>) -> (i32, i32) {
         .map(|(l, r)| (l - r).abs())
         .sum();
 
-    let mut right_frequencies: HashMap<&i32, i32> = HashMap::new();
+    let mut right_frequencies: HashMap<&i64, i64> = HashMap::new();
     for i in right.iter() {
         *right_frequencies.entry(i).or_insert(0) += 1;
     }
 
-    let parttwo: i32 = left
+    let parttwo: i64 = left
         .iter()
         .map(|x| x * right_frequencies.get(x).unwrap_or(&0))
         .sum();
@@ -30,7 +30,7 @@ pub(crate) fn day01(lines: Vec<String>) -> (i32, i32) {
     (partone, parttwo)
 }
 
-fn sort(vec: &Vec<i32>) -> Vec<i32> {
+fn sort(vec: &Vec<i64>) -> Vec<i64> {
     let mut sorted = vec.clone();
     sorted.sort();
     sorted
