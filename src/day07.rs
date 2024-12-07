@@ -53,7 +53,7 @@ impl Equation {
                 .fold(0, |acc, (op, val)| match op {
                     Operator::Add => acc + val,
                     Operator::Multiply => acc * val,
-                    Operator::Concatenate => format!("{}{}", acc, val).parse().unwrap(),
+                    Operator::Concatenate => (acc * (10_i64.pow(val.ilog10() + 1))) + val,
                 })
                 == self.lhs
         })
