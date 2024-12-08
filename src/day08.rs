@@ -1,5 +1,6 @@
+use std::cmp::max;
 use std::collections::{HashMap, HashSet};
-use std::ops::{Add, Sub};
+use std::ops::{Add, Mul, Sub};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 struct Point {
@@ -28,6 +29,17 @@ impl Sub for Point {
         }
     }
 }
+
+impl Mul<i32> for Point {
+    type Output = Point;
+
+    fn mul(self, rhs: i32) -> Self::Output {
+        Self {
+            x: self.x * rhs,
+            y: self.y * rhs,
+        }
+    }
+}
 #[derive(Debug, Clone, Copy)]
 struct AntennaPair {
     a: Point,
@@ -39,37 +51,57 @@ impl AntennaPair {
         let a_to_b = self.b - self.a;
         [self.a - a_to_b, self.b + a_to_b]
     }
+
+    fn antinodes_repeating(&self, n: i32) -> Vec<Point> {
+        let a_to_b = self.b - self.a;
+        (0..n)
+            .map(|i| [self.a - (a_to_b * i), self.b + (a_to_b * i)])
+            .flatten()
+            .collect()
+    }
 }
 
 pub(crate) fn day08(lines: Vec<String>) -> (i64, i64) {
     let antennas = parse(&lines);
     let x_limit = lines[0].chars().count() as i32;
     let y_limit = lines.len() as i32;
+    let in_bounds = |p: &Point| p.x >= 0 && p.y >= 0 && p.x < x_limit && p.y < y_limit;
 
-    let mut all_antinodes: HashSet<Point> = HashSet::new();
+    let antenna_pairs: Vec<_> = antennas
+        .iter()
+        .map(|(_, antennas)| {
+            antennas
+                .iter()
+                .map(|a| {
+                    antennas
+                        .iter()
+                        .filter(move |&b| b != a)
+                        .map(|b| AntennaPair {
+                            a: a.clone(),
+                            b: b.clone(),
+                        })
+                })
+                .flatten()
+        })
+        .flatten()
+        .collect();
 
-    for (_freq, antennas) in antennas.iter() {
-        let antinodes = antennas
-            .iter()
-            .map(|a| {
-                antennas
-                    .iter()
-                    .filter(move |&b| b != a)
-                    .map(|b| AntennaPair {
-                        a: a.clone(),
-                        b: b.clone(),
-                    })
-            })
-            .flatten()
-            .map(|ap| ap.antinodes())
-            .flatten()
-            .filter(|p| p.x >= 0 && p.y >= 0 && p.x < x_limit && p.y < y_limit)
-            .collect::<Vec<_>>();
-        all_antinodes.extend(antinodes);
-    }
+    let antinodes_p1: HashSet<Point> = antenna_pairs
+        .iter()
+        .map(|ap| ap.antinodes())
+        .flatten()
+        .filter(in_bounds)
+        .collect();
 
-    let partone = all_antinodes.len() as i64;
-    let parttwo = 0;
+    let antinodes_p2: HashSet<Point> = antenna_pairs
+        .iter()
+        .map(|ap| ap.antinodes_repeating(max(x_limit, y_limit)))
+        .flatten()
+        .filter(in_bounds)
+        .collect();
+
+    let partone = antinodes_p1.len() as i64;
+    let parttwo = antinodes_p2.len() as i64;
     (partone, parttwo)
 }
 
@@ -100,7 +132,7 @@ mod tests {
     #[test]
     fn test_day_08_small() {
         let lines = read_testfile("day08test.txt");
-        assert_eq!(day08(lines), (14, 0));
+        assert_eq!(day08(lines), (14, 34));
     }
 
     #[test]
