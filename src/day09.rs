@@ -29,6 +29,12 @@ fn compress_file_blocks(filesystem: &mut FileSystem) {
     }
 }
 
+#[derive(Copy, Clone)]
+struct File {
+    value: Option<usize>,
+    size: usize,
+}
+
 fn checksum(filesystem: &Vec<Option<usize>>) -> usize {
     filesystem
         .iter()
@@ -38,35 +44,64 @@ fn checksum(filesystem: &Vec<Option<usize>>) -> usize {
         .sum::<usize>()
 }
 
-pub(crate) fn day09(lines: Vec<String>) -> (i64, i64) {
-    let orig_filesystem = parse(&lines[0]);
+fn compress_files(diskmap: &mut Vec<File>) {
+    for file_idx in (0..diskmap.len()).rev() {
+        if diskmap[file_idx].value.is_none() {
+            continue;
+        }
+        let file_size = diskmap[file_idx].size;
+        for gap in 0..file_idx {
+            if diskmap[gap].value.is_some() || diskmap[gap].size < file_size {
+                continue;
+            }
+            diskmap[gap].size -= diskmap[file_idx].size;
+            let new_file = diskmap[file_idx].clone();
+            diskmap[file_idx].value = None;
+            diskmap.insert(gap, new_file);
+            break;
+        }
+    }
+}
 
-    let mut filesystem = orig_filesystem.clone();
+pub(crate) fn day09(lines: Vec<String>) -> (i64, i64) {
+    let mut diskmap = parse_diskmap(&lines[0]);
+    let mut filesystem = diskmap_to_filesystem(&diskmap);
     compress_file_blocks(&mut filesystem);
 
-    let checksum = checksum(&filesystem);
+    compress_files(&mut diskmap);
 
-    let partone = checksum as i64;
-    let parttwo = 0;
+    let partone = checksum(&filesystem) as i64;
+    let parttwo = checksum(&diskmap_to_filesystem(&diskmap)) as i64;
     (partone, parttwo)
 }
 
-fn parse(disk_map: &str) -> FileSystem {
+fn parse_diskmap(disk_map: &str) -> Vec<File> {
     let mut out = Vec::new();
     for (i, n) in disk_map
         .chars()
         .map(|n| n.to_digit(10).unwrap())
         .enumerate()
     {
-        for _ in 0..n {
-            out.push(match i % 2 {
-                0 => Some(i / 2),
-                1 => None,
-                _ => panic!(),
-            })
+        let value = match i % 2 {
+            0 => Some(i / 2),
+            1 => None,
+            _ => panic!(),
+        };
+        out.push(File {
+            value,
+            size: n as usize,
+        });
+    }
+    out
+}
+
+fn diskmap_to_filesystem(diskmap: &Vec<File>) -> FileSystem {
+    let mut out = Vec::new();
+    for file in diskmap {
+        for _ in 0..file.size {
+            out.push(file.value);
         }
     }
-
     out
 }
 
@@ -79,17 +114,20 @@ mod tests {
     #[test]
     fn test_day_09_small() {
         let lines = read_testfile("day09test.txt");
-        assert_eq!(day09(lines), (1928, 0));
+        assert_eq!(day09(lines), (1928, 2858));
     }
 
     #[test]
     fn test_day_09() {
         let lines = read_testfile("day09.txt");
-        assert_eq!(day09(lines), (6259790630969, 0));
+        assert_eq!(day09(lines), (6259790630969, 6289564433984));
     }
 
     #[test]
     fn test_parse() {
-        assert_eq!(filesystem_to_string(&parse("12345")), "0..111....22222")
+        assert_eq!(
+            filesystem_to_string(&diskmap_to_filesystem(&parse_diskmap("12345"))),
+            "0..111....22222"
+        )
     }
 }
