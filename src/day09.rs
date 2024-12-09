@@ -67,42 +67,34 @@ pub(crate) fn day09(lines: Vec<String>) -> (i64, i64) {
     let mut diskmap = parse_diskmap(&lines[0]);
     let mut filesystem = diskmap_to_filesystem(&diskmap);
     compress_file_blocks(&mut filesystem);
-
     compress_files(&mut diskmap);
-
     let partone = checksum(&filesystem) as i64;
     let parttwo = checksum(&diskmap_to_filesystem(&diskmap)) as i64;
     (partone, parttwo)
 }
 
 fn parse_diskmap(disk_map: &str) -> Vec<File> {
-    let mut out = Vec::new();
-    for (i, n) in disk_map
+    disk_map
         .chars()
-        .map(|n| n.to_digit(10).unwrap())
+        .map(|n| n.to_digit(10).unwrap() as usize)
         .enumerate()
-    {
-        let value = match i % 2 {
-            0 => Some(i / 2),
-            1 => None,
-            _ => panic!(),
-        };
-        out.push(File {
-            value,
-            size: n as usize,
-        });
-    }
-    out
+        .map(|(i, n)| File {
+            value: match i % 2 {
+                0 => Some(i / 2),
+                1 => None,
+                _ => panic!(),
+            },
+            size: n,
+        })
+        .collect()
 }
 
 fn diskmap_to_filesystem(diskmap: &Vec<File>) -> FileSystem {
-    let mut out = Vec::new();
-    for file in diskmap {
-        for _ in 0..file.size {
-            out.push(file.value);
-        }
-    }
-    out
+    diskmap
+        .iter()
+        .map(|file| (0..file.size).map(|_| file.value))
+        .flatten()
+        .collect()
 }
 
 #[cfg(test)]
