@@ -138,6 +138,6 @@ mod tests {
     #[test]
     fn test_day_08() {
         let lines = read_testfile("day08.txt");
-        assert_eq!(day08(lines), (376, 0));
+        assert_eq!(day08(lines), (376, 1352));
     }
 }
