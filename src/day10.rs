@@ -9,13 +9,12 @@ fn neighbours(&(h, w): &(i32, i32)) -> [(i32, i32); 4] {
 pub(crate) fn day10(lines: Vec<String>) -> (i64, i64) {
     let topography = parse(lines);
 
-    let trailheads: Vec<_> = topography
+    let trailheads = topography
         .iter()
         .filter(|(_, &val)| val == 0)
-        .map(|(&pos, _)| pos)
-        .collect();
+        .map(|(&pos, _)| pos);
 
-    let mut paths: Vec<_> = trailheads.iter().map(|&pos| vec![pos]).collect();
+    let mut paths: Vec<_> = trailheads.map(|pos| vec![pos]).collect();
     for i in 1..=9 {
         let mut new_paths = Vec::new();
         for path in &paths {
