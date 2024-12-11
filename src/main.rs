@@ -8,6 +8,7 @@ mod day07;
 mod day08;
 mod day09;
 mod day10;
+mod day11;
 
 use clap::Parser;
 use std::fs::File;
@@ -33,6 +34,8 @@ fn main() {
         7 => day07::day07,
         8 => day08::day08,
         9 => day09::day09,
+        10 => day10::day10,
+        11 => day11::day11,
         _ => panic!(),
     };
     println!("{:?}", day(lines))
