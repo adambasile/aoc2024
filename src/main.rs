@@ -14,6 +14,7 @@ use clap::Parser;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::PathBuf;
+use std::time::Instant;
 
 #[derive(Parser)]
 struct Cli {
@@ -24,6 +25,7 @@ struct Cli {
 fn main() {
     let args: Cli = Cli::parse();
     let lines = read_lines_from_file(args.path);
+    let before = Instant::now();
     let day = match args.day {
         1 => day01::day01,
         2 => day02::day02,
@@ -38,7 +40,8 @@ fn main() {
         11 => day11::day11,
         _ => panic!(),
     };
-    println!("{:?}", day(lines))
+    println!("{:?}", day(lines));
+    println!("Elapsed time: {:.2?}", before.elapsed());
 }
 
 fn read_lines_from_file(path: PathBuf) -> Vec<String> {
