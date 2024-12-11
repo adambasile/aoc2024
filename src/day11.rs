@@ -9,19 +9,22 @@ pub(crate) fn day11(lines: Vec<String>) -> (i64, i64) {
     let p1_n = 25;
     let p2_n = 75;
 
-    blink(&mut stones, p1_n);
+    stones = blink(stones, p1_n);
     let partone = stones.len() as i64;
     let parttwo = 0;
     (partone, parttwo)
 }
 
-fn blink(mut stones: &mut Vec<u64>, n: i32) {
+fn blink(mut stones: Vec<u64>, n: i32) -> Vec<u64> {
+    let mut stones = stones;
     for _ in 0..n {
-        blink_once(&mut stones)
+        stones = blink_once(stones);
     }
+    stones
 }
 
-fn blink_once(stones: &mut Vec<u64>) {
+fn blink_once(stones: Vec<u64>) -> Vec<u64> {
+    let mut stones = stones.clone();
     for i in 0..stones.len() {
         let stone = stones[i];
         if stone == 0 {
@@ -34,6 +37,7 @@ fn blink_once(stones: &mut Vec<u64>) {
             stones[i] *= 2024;
         }
     }
+    stones
 }
 
 fn split_number(stone: u64) -> (u64, u64) {
@@ -63,9 +67,10 @@ mod tests {
 
     #[test]
     fn test_blink_once() {
-        let mut stones = vec![0, 1, 10, 99, 999];
-        blink_once(&mut stones);
-        assert_eq!(stones, vec![1, 2024, 1, 0, 9, 9, 2021976]);
+        assert_eq!(
+            blink_once(vec![0, 1, 10, 99, 999]),
+            vec![1, 2024, 1, 0, 9, 9, 2021976]
+        );
     }
 
     #[test]
