@@ -34,26 +34,6 @@ enum Direction {
     DOWN,
 }
 
-pub(crate) fn day15(lines: Vec<String>) -> (i64, i64) {
-    let (warehouse, robot, instructions) = parse(lines);
-    let messy_warehouse = carry_out(&warehouse, &robot, &instructions);
-    print_boxes(&messy_warehouse, "After");
-    let partone = messy_warehouse
-        .iter()
-        .filter(|(_, &obstacle)| obstacle == Obstacle::BOX)
-        .map(|(Point { x, y }, _)| x + (100 * y))
-        .sum();
-    let parttwo = 0;
-    (partone, parttwo)
-}
-
-fn print_boxes(warehouse: &HashMap<Point, Obstacle>, prefix: &str) {
-    warehouse
-        .iter()
-        .filter(|(_, &obstacle)| obstacle == Obstacle::BOX)
-        .for_each(|(Point { x, y }, _)| println!("{}: {:02}, {:02}", prefix, x, y));
-}
-
 fn carry_out(
     warehouse: &HashMap<Point, Obstacle>,
     robot: &Point,
@@ -62,7 +42,7 @@ fn carry_out(
     let mut warehouse = warehouse.clone();
     let mut robot = robot.clone();
 
-    'instructions: for (i, instruction) in instructions.iter().enumerate() {
+    'instructions: for instruction in instructions.iter() {
         let robot_next = robot.next(instruction);
         let mut under_consideration = robot_next.clone();
         loop {
@@ -78,6 +58,18 @@ fn carry_out(
         robot = robot_next;
     }
     warehouse
+}
+
+pub(crate) fn day15(lines: Vec<String>) -> (i64, i64) {
+    let (warehouse, robot, instructions) = parse(lines);
+    let messy_warehouse = carry_out(&warehouse, &robot, &instructions);
+    let partone = messy_warehouse
+        .iter()
+        .filter(|(_, &obstacle)| obstacle == Obstacle::BOX)
+        .map(|(Point { x, y }, _)| x + (100 * y))
+        .sum();
+    let parttwo = 0;
+    (partone, parttwo)
 }
 
 fn parse(lines: Vec<String>) -> (HashMap<Point, Obstacle>, Point, Vec<Direction>) {
