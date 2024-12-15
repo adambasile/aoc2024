@@ -18,43 +18,6 @@ impl Point {
             y: self.y.rem_euclid(height),
         }
     }
-
-    fn neighbours(&self) -> [Self; 8] {
-        [
-            Self {
-                x: self.x - 1,
-                y: self.y,
-            },
-            Self {
-                x: self.x - 1,
-                y: self.y - 1,
-            },
-            Self {
-                x: self.x,
-                y: self.y - 1,
-            },
-            Self {
-                x: self.x + 1,
-                y: self.y - 1,
-            },
-            Self {
-                x: self.x + 1,
-                y: self.y,
-            },
-            Self {
-                x: self.x + 1,
-                y: self.y + 1,
-            },
-            Self {
-                x: self.x,
-                y: self.y + 1,
-            },
-            Self {
-                x: self.x - 1,
-                y: self.y + 1,
-            },
-        ]
-    }
 }
 
 impl Add<Point> for Point {
@@ -138,10 +101,10 @@ fn calculate_safety_factor(final_positions: Vec<Point>, width: i64, height: i64)
         }
     }
 
-    let partone = quadrant_counts.values().fold(1, |acc, e| acc * e);
-    partone
+    quadrant_counts.values().fold(1, |acc, e| acc * e)
 }
 
+#[allow(dead_code)]
 fn find_tree(robots: &Vec<Robot>, width: i64, height: i64) {
     for n in 0..20000 {
         let unique_robot_positions: HashSet<_> = robots
@@ -196,7 +159,7 @@ pub(crate) fn day14(lines: Vec<String>) -> (i64, i64) {
         width,
         height,
     );
-    find_tree(&robots, width, height);
+    // find_tree(&robots, width, height);
     (partone, 0)
 }
 
