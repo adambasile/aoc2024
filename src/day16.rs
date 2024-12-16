@@ -30,6 +30,13 @@ enum Direction {
     DOWN,
 }
 
+const DIRECTIONS: [Direction; 4] = [
+    Direction::UP,
+    Direction::RIGHT,
+    Direction::DOWN,
+    Direction::LEFT,
+];
+
 impl Direction {
     fn opposite(&self, other: &Self) -> bool {
         &self.reverse() == other
@@ -99,17 +106,14 @@ fn find_path_cost(maze_walls: HashSet<Point>, start: Point, end: Point) -> Optio
             break;
         }
         let visited_test = (current.point, current.direction);
-        if let Some(&visited_cost) = visited.get(&visited_test) {
-            if current.cost == visited_cost {
-                if let Some(previous) = previous {
-                    breadcrumbs
-                        .entry(visited_test)
-                        .and_modify(|p| p.push(previous));
-                }
-            }
-            continue;
-        }
+
         if let Some(previous) = previous {
+            if let Some(&visited_cost) = visited.get(&visited_test) {
+                if current.cost == visited_cost {
+                    breadcrumbs.get_mut(&visited_test).unwrap().push(previous);
+                }
+                continue;
+            }
             breadcrumbs.insert(visited_test, vec![previous]);
         }
         visited.insert(visited_test, current.cost);
@@ -118,18 +122,10 @@ fn find_path_cost(maze_walls: HashSet<Point>, start: Point, end: Point) -> Optio
             min_cost = Some(current.cost);
             continue;
         }
-        for &new_direction in [
-            Direction::UP,
-            Direction::RIGHT,
-            Direction::DOWN,
-            Direction::LEFT,
-        ]
-        .iter()
-        {
+        for &new_direction in DIRECTIONS.iter() {
             if current.direction.opposite(&new_direction) {
                 continue;
             }
-
             let next_point = current.point.next(&new_direction);
             if maze_walls.contains(&next_point) {
                 continue;
@@ -161,16 +157,11 @@ fn get_points_on_trail(
     breadcrumbs: HashMap<(Point, Direction), Vec<(Point, Direction)>>,
     end: Point,
 ) -> HashSet<Point> {
-    let mut to_visit: Vec<_> = [
-        Direction::UP,
-        Direction::RIGHT,
-        Direction::DOWN,
-        Direction::LEFT,
-    ]
-    .iter()
-    .map(|&d| (end, d))
-    .filter(|x| breadcrumbs.contains_key(x))
-    .collect();
+    let mut to_visit: Vec<_> = DIRECTIONS
+        .iter()
+        .map(|&d| (end, d))
+        .filter(|x| breadcrumbs.contains_key(x))
+        .collect();
     let mut visited = HashSet::new();
     while let Some(current) = to_visit.pop() {
         if !visited.insert(current) {
