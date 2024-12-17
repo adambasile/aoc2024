@@ -16,6 +16,7 @@ mod day15;
 mod day16;
 
 use clap::Parser;
+use std::fmt::{Display, Formatter};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::PathBuf;
@@ -27,11 +28,26 @@ struct Cli {
     path: PathBuf,
 }
 
+#[derive(Debug, Eq, PartialEq)]
+enum FunctionOutput {
+    IntPair(i64, i64),
+    StringPair(String, String),
+}
+
+impl Display for FunctionOutput {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            FunctionOutput::IntPair(a, b) => write!(f, "{}, {}", a, b),
+            FunctionOutput::StringPair(a, b) => write!(f, "{}, {}", a, b),
+        }
+    }
+}
+
 fn main() {
     let args: Cli = Cli::parse();
     let lines = read_lines_from_file(args.path);
     let before = Instant::now();
-    let day = match args.day {
+    let day: fn(Vec<String>) -> FunctionOutput = match args.day {
         1 => day01::day01,
         2 => day02::day02,
         3 => day03::day03,
@@ -50,7 +66,7 @@ fn main() {
         16 => day16::day16,
         _ => panic!(),
     };
-    println!("{:?}", day(lines));
+    println!("{}", day(lines));
     println!("Elapsed time: {:.2?}", before.elapsed());
 }
 

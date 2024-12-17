@@ -1,6 +1,8 @@
+use crate::FunctionOutput;
+use crate::FunctionOutput::IntPair;
 use memoize::memoize;
 
-pub(crate) fn day11(lines: Vec<String>) -> (i64, i64) {
+pub(crate) fn day11(lines: Vec<String>) -> FunctionOutput {
     let stones: Vec<_> = lines[0]
         .split_whitespace()
         .map(|x| x.parse::<u64>().unwrap())
@@ -8,7 +10,7 @@ pub(crate) fn day11(lines: Vec<String>) -> (i64, i64) {
 
     let partone = blink(&stones, 25) as i64;
     let parttwo = blink(&stones, 75) as i64;
-    (partone, parttwo)
+    IntPair(partone, parttwo)
 }
 
 fn blink(stones: &Vec<u64>, n: u32) -> u64 {
@@ -48,13 +50,13 @@ mod tests {
     #[test]
     fn test_day_11_small() {
         let lines = read_testfile("day11test.txt");
-        assert_eq!(day11(lines), (55312, 65601038650482));
+        assert_eq!(day11(lines), IntPair(55312, 65601038650482));
     }
 
     #[test]
     fn test_day_11() {
         let lines = read_testfile("day11.txt");
-        assert_eq!(day11(lines), (203228, 240884656550923));
+        assert_eq!(day11(lines), IntPair(203228, 240884656550923));
     }
 
     #[test]

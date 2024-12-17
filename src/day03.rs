@@ -1,9 +1,11 @@
+use crate::FunctionOutput;
+use crate::FunctionOutput::IntPair;
 use regex::Regex;
 
-pub(crate) fn day03(lines: Vec<String>) -> (i64, i64) {
+pub(crate) fn day03(lines: Vec<String>) -> FunctionOutput {
     let partone = multiply_some_numbers(&lines, false);
     let parttwo = multiply_some_numbers(&lines, true);
-    (partone, parttwo)
+    IntPair(partone, parttwo)
 }
 
 fn multiply_some_numbers(lines: &Vec<String>, sanitise: bool) -> i64 {
@@ -34,12 +36,12 @@ mod tests {
     #[test]
     fn test_day_03_small() {
         let lines = read_testfile("day03test.txt");
-        assert_eq!(day03(lines), (161, 48));
+        assert_eq!(day03(lines), IntPair(161, 48));
     }
 
     #[test]
     fn test_day_03() {
         let lines = read_testfile("day03.txt");
-        assert_eq!(day03(lines), (182780583, 90772405));
+        assert_eq!(day03(lines), IntPair(182780583, 90772405));
     }
 }

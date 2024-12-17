@@ -1,3 +1,5 @@
+use crate::FunctionOutput;
+use crate::FunctionOutput::IntPair;
 use std::cmp::Ordering;
 use std::collections::{BTreeSet, HashMap, HashSet};
 
@@ -80,13 +82,13 @@ struct Holder {
     direction: Direction,
 }
 
-pub(crate) fn day16(lines: Vec<String>) -> (i64, i64) {
+pub(crate) fn day16(lines: Vec<String>) -> FunctionOutput {
     let (maze_walls, start, end) = parse(lines);
     let (path_cost, num_on_path) = find_path_cost(maze_walls, start, end).unwrap();
 
     let partone = path_cost;
     let parttwo = num_on_path;
-    (partone, parttwo)
+    IntPair(partone, parttwo)
 }
 
 fn find_path_cost(maze_walls: HashSet<Point>, start: Point, end: Point) -> Option<(i64, i64)> {
@@ -249,16 +251,16 @@ mod tests {
     #[test]
     fn test_day_16_small1() {
         let lines = read_testfile("day16test1.txt");
-        assert_eq!(day16(lines), (7036, 45));
+        assert_eq!(day16(lines), IntPair(7036, 45));
     }
     #[test]
     fn test_day_16_small2() {
         let lines = read_testfile("day16test2.txt");
-        assert_eq!(day16(lines), (11048, 64));
+        assert_eq!(day16(lines), IntPair(11048, 64));
     }
     #[test]
     fn test_day_16() {
         let lines = read_testfile("day16.txt");
-        assert_eq!(day16(lines), (65436, 489));
+        assert_eq!(day16(lines), IntPair(65436, 489));
     }
 }

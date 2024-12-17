@@ -1,3 +1,5 @@
+use crate::FunctionOutput;
+use crate::FunctionOutput::IntPair;
 use std::cmp::PartialEq;
 use std::collections::HashSet;
 
@@ -120,7 +122,7 @@ impl Area {
     }
 }
 
-pub(crate) fn day06(lines: Vec<String>) -> (i64, i64) {
+pub(crate) fn day06(lines: Vec<String>) -> FunctionOutput {
     let mut guards = Vec::new();
     let mut obstructions = HashSet::new();
 
@@ -175,7 +177,7 @@ pub(crate) fn day06(lines: Vec<String>) -> (i64, i64) {
         }
     }
 
-    (partone, parttwo)
+    IntPair(partone, parttwo)
 }
 
 #[cfg(test)]
@@ -187,12 +189,12 @@ mod tests {
     #[test]
     fn test_day_06_small() {
         let lines = read_testfile("day06test.txt");
-        assert_eq!(day06(lines), (41, 6));
+        assert_eq!(day06(lines), IntPair(41, 6));
     }
 
     #[test]
     fn test_day_06() {
         let lines = read_testfile("day06.txt");
-        assert_eq!(day06(lines), (4515, 1309));
+        assert_eq!(day06(lines), IntPair(4515, 1309));
     }
 }

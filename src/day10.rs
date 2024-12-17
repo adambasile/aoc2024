@@ -1,3 +1,5 @@
+use crate::FunctionOutput;
+use crate::FunctionOutput::IntPair;
 use std::collections::{HashMap, HashSet};
 
 type Topography = HashMap<(i32, i32), usize>;
@@ -6,7 +8,7 @@ fn neighbours(&(h, w): &(i32, i32)) -> [(i32, i32); 4] {
     [(h - 1, w), (h, w - 1), (h + 1, w), (h, w + 1)]
 }
 
-pub(crate) fn day10(lines: Vec<String>) -> (i64, i64) {
+pub(crate) fn day10(lines: Vec<String>) -> FunctionOutput {
     let topography = parse(lines);
 
     let trailheads = topography
@@ -40,7 +42,7 @@ pub(crate) fn day10(lines: Vec<String>) -> (i64, i64) {
         .collect::<HashSet<_>>()
         .len() as i64;
     let parttwo = paths.len() as i64;
-    (partone, parttwo)
+    IntPair(partone, parttwo)
 }
 
 fn parse(lines: Vec<String>) -> Topography {
@@ -65,12 +67,12 @@ mod tests {
     #[test]
     fn test_day_10_small() {
         let lines = read_testfile("day10test.txt");
-        assert_eq!(day10(lines), (36, 81));
+        assert_eq!(day10(lines), IntPair(36, 81));
     }
 
     #[test]
     fn test_day_10() {
         let lines = read_testfile("day10.txt");
-        assert_eq!(day10(lines), (760, 1764));
+        assert_eq!(day10(lines), IntPair(760, 1764));
     }
 }

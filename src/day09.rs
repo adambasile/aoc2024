@@ -1,3 +1,6 @@
+use crate::FunctionOutput;
+use crate::FunctionOutput::IntPair;
+
 type FileSystem = Vec<Option<usize>>;
 
 fn filesystem_to_string(fs: &FileSystem) -> String {
@@ -63,14 +66,14 @@ fn compress_files(diskmap: &mut Vec<File>) {
     }
 }
 
-pub(crate) fn day09(lines: Vec<String>) -> (i64, i64) {
+pub(crate) fn day09(lines: Vec<String>) -> FunctionOutput {
     let mut diskmap = parse_diskmap(&lines[0]);
     let mut filesystem = diskmap_to_filesystem(&diskmap);
     compress_file_blocks(&mut filesystem);
     compress_files(&mut diskmap);
     let partone = checksum(&filesystem) as i64;
     let parttwo = checksum(&diskmap_to_filesystem(&diskmap)) as i64;
-    (partone, parttwo)
+    IntPair(partone, parttwo)
 }
 
 fn parse_diskmap(disk_map: &str) -> Vec<File> {
@@ -106,13 +109,13 @@ mod tests {
     #[test]
     fn test_day_09_small() {
         let lines = read_testfile("day09test.txt");
-        assert_eq!(day09(lines), (1928, 2858));
+        assert_eq!(day09(lines), IntPair(1928, 2858));
     }
 
     #[test]
     fn test_day_09() {
         let lines = read_testfile("day09.txt");
-        assert_eq!(day09(lines), (6259790630969, 6289564433984));
+        assert_eq!(day09(lines), IntPair(6259790630969, 6289564433984));
     }
 
     #[test]

@@ -1,3 +1,5 @@
+use crate::FunctionOutput;
+use crate::FunctionOutput::IntPair;
 use regex::Regex;
 
 #[derive(Debug, Copy, Clone)]
@@ -76,11 +78,11 @@ impl Matrix2x2 {
     }
 }
 
-pub(crate) fn day13(lines: Vec<String>) -> (i64, i64) {
+pub(crate) fn day13(lines: Vec<String>) -> FunctionOutput {
     let machines = parse(lines);
     let partone = machines.iter().map(|m| m.cost()).sum();
     let parttwo = machines.iter().map(|m| m.add_ten_trillion().cost()).sum();
-    (partone, parttwo)
+    IntPair(partone, parttwo)
 }
 
 fn parse(lines: Vec<String>) -> Vec<Machine> {
@@ -118,12 +120,12 @@ mod tests {
     #[test]
     fn test_day_13_small() {
         let lines = read_testfile("day13test.txt");
-        assert_eq!(day13(lines), (480, 875318608908));
+        assert_eq!(day13(lines), IntPair(480, 875318608908));
     }
 
     #[test]
     fn test_day_13() {
         let lines = read_testfile("day13.txt");
-        assert_eq!(day13(lines), (26005, 105620095782547));
+        assert_eq!(day13(lines), IntPair(26005, 105620095782547));
     }
 }

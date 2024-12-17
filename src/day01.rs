@@ -1,6 +1,8 @@
+use crate::FunctionOutput;
+use crate::FunctionOutput::IntPair;
 use std::collections::HashMap;
 
-pub(crate) fn day01(lines: Vec<String>) -> (i64, i64) {
+pub(crate) fn day01(lines: Vec<String>) -> FunctionOutput {
     let parsed_lines: Vec<(i64, i64)> = lines
         .iter()
         .map(|l| {
@@ -27,7 +29,7 @@ pub(crate) fn day01(lines: Vec<String>) -> (i64, i64) {
         .map(|x| x * right_frequencies.get(x).unwrap_or(&0))
         .sum();
 
-    (partone, parttwo)
+    IntPair(partone, parttwo)
 }
 
 fn sort(vec: &Vec<i64>) -> Vec<i64> {
@@ -39,18 +41,19 @@ fn sort(vec: &Vec<i64>) -> Vec<i64> {
 #[cfg(test)]
 mod tests {
     use crate::read_testfile;
+    use crate::FunctionOutput::IntPair;
 
     use super::*;
 
     #[test]
     fn test_day_01_small() {
         let lines = read_testfile("day01test.txt");
-        assert_eq!(day01(lines), (11, 31));
+        assert_eq!(day01(lines), IntPair(11, 31));
     }
 
     #[test]
     fn test_day_01() {
         let lines = read_testfile("day01.txt");
-        assert_eq!(day01(lines), (1651298, 21306195));
+        assert_eq!(day01(lines), IntPair(1651298, 21306195));
     }
 }

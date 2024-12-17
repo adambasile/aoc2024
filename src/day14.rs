@@ -1,3 +1,5 @@
+use crate::FunctionOutput;
+use crate::FunctionOutput::IntPair;
 use regex::Regex;
 use std::collections::{HashMap, HashSet};
 use std::fs::File;
@@ -145,7 +147,7 @@ fn save_robot_positions(positions: &HashSet<Point>, n: i64, width: i64, height: 
         .unwrap();
 }
 
-pub(crate) fn day14(lines: Vec<String>) -> (i64, i64) {
+pub(crate) fn day14(lines: Vec<String>) -> FunctionOutput {
     let robots = parse(&lines);
 
     let width = 101;
@@ -160,7 +162,7 @@ pub(crate) fn day14(lines: Vec<String>) -> (i64, i64) {
         height,
     );
     // find_tree(&robots, width, height);
-    (partone, 0)
+    IntPair(partone, 0)
 }
 
 fn parse(lines: &Vec<String>) -> Vec<Robot> {
@@ -191,12 +193,12 @@ mod tests {
     #[test]
     fn test_day_14_small() {
         let lines = read_testfile("day14test.txt");
-        assert_eq!(day14(lines), (21, 0));
+        assert_eq!(day14(lines), IntPair(21, 0));
     }
 
     #[test]
     fn test_day_14() {
         let lines = read_testfile("day14.txt");
-        assert_eq!(day14(lines), (221142636, 0));
+        assert_eq!(day14(lines), IntPair(221142636, 0));
     }
 }

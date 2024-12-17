@@ -1,3 +1,6 @@
+use crate::FunctionOutput;
+use crate::FunctionOutput::IntPair;
+
 #[derive(Debug)]
 struct Rule {
     before: i64,
@@ -36,7 +39,7 @@ impl Rule {
     }
 }
 
-pub(crate) fn day05(lines: Vec<String>) -> (i64, i64) {
+pub(crate) fn day05(lines: Vec<String>) -> FunctionOutput {
     let split_point = lines.iter().position(|l| l == "").unwrap();
     let rules_input: Vec<_> = lines[..split_point].into();
     let updates_input: Vec<_> = lines[(split_point + 1)..].into();
@@ -85,7 +88,7 @@ pub(crate) fn day05(lines: Vec<String>) -> (i64, i64) {
         .iter()
         .map(|pages| pages.iter().nth(pages.len() / 2).unwrap())
         .sum();
-    (partone, parttwo)
+    IntPair(partone, parttwo)
 }
 
 #[cfg(test)]
@@ -97,12 +100,12 @@ mod tests {
     #[test]
     fn test_day_05_small() {
         let lines = read_testfile("day05test.txt");
-        assert_eq!(day05(lines), (143, 123));
+        assert_eq!(day05(lines), IntPair(143, 123));
     }
 
     #[test]
     fn test_day_05() {
         let lines = read_testfile("day05.txt");
-        assert_eq!(day05(lines), (4185, 4480));
+        assert_eq!(day05(lines), IntPair(4185, 4480));
     }
 }

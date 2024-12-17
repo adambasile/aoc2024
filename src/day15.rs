@@ -1,3 +1,5 @@
+use crate::FunctionOutput;
+use crate::FunctionOutput::IntPair;
 use std::collections::{BTreeSet, HashMap};
 
 #[derive(Hash, PartialEq, Eq, Clone, Copy, Debug, PartialOrd, Ord)]
@@ -90,7 +92,7 @@ fn carry_out(
     warehouse
 }
 
-pub(crate) fn day15(lines: Vec<String>) -> (i64, i64) {
+pub(crate) fn day15(lines: Vec<String>) -> FunctionOutput {
     let (warehouse, wide_warehouse, robot, wide_robot, instructions) = parse(lines);
 
     let tidied_wide_warehouse = carry_out(&wide_warehouse, &wide_robot, &instructions);
@@ -106,7 +108,7 @@ pub(crate) fn day15(lines: Vec<String>) -> (i64, i64) {
         .filter(|(_, &obstacle)| obstacle == Obstacle::LEFTBOX)
         .map(|(Point { x, y }, _)| x + (100 * y))
         .sum();
-    (partone, parttwo)
+    IntPair(partone, parttwo)
 }
 
 #[allow(dead_code)]
@@ -216,17 +218,17 @@ mod tests {
     #[test]
     fn test_day_15_small1() {
         let lines = read_testfile("day15test1.txt");
-        assert_eq!(day15(lines), (2028, 1751));
+        assert_eq!(day15(lines), IntPair(2028, 1751));
     }
     #[test]
     fn test_day_15_small2() {
         let lines = read_testfile("day15test2.txt");
-        assert_eq!(day15(lines), (908, 618));
+        assert_eq!(day15(lines), IntPair(908, 618));
     }
 
     #[test]
     fn test_day_15() {
         let lines = read_testfile("day15.txt");
-        assert_eq!(day15(lines), (1383666, 1412866));
+        assert_eq!(day15(lines), IntPair(1383666, 1412866));
     }
 }

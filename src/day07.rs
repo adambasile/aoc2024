@@ -1,3 +1,6 @@
+use crate::FunctionOutput;
+use crate::FunctionOutput::IntPair;
+
 #[derive(Debug)]
 struct Equation {
     lhs: i64,
@@ -60,7 +63,7 @@ impl Equation {
     }
 }
 
-pub(crate) fn day07(lines: Vec<String>) -> (i64, i64) {
+pub(crate) fn day07(lines: Vec<String>) -> FunctionOutput {
     let equations: Vec<Equation> = lines.iter().map(|s| s.into()).collect();
     let partone = (&equations)
         .iter()
@@ -72,7 +75,7 @@ pub(crate) fn day07(lines: Vec<String>) -> (i64, i64) {
         .filter(|e| e.possible(true))
         .map(|e| e.lhs)
         .sum();
-    (partone, parttwo)
+    IntPair(partone, parttwo)
 }
 
 #[cfg(test)]
@@ -84,12 +87,12 @@ mod tests {
     #[test]
     fn test_day_07_small() {
         let lines = read_testfile("day07test.txt");
-        assert_eq!(day07(lines), (3749, 11387));
+        assert_eq!(day07(lines), IntPair(3749, 11387));
     }
 
     #[test]
     fn test_day_07() {
         let lines = read_testfile("day07.txt");
-        assert_eq!(day07(lines), (1298103531759, 140575048428831));
+        assert_eq!(day07(lines), IntPair(1298103531759, 140575048428831));
     }
 }

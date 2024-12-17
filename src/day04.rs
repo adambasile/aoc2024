@@ -1,6 +1,8 @@
+use crate::FunctionOutput;
+use crate::FunctionOutput::IntPair;
 use regex::Regex;
 
-pub(crate) fn day04(lines: Vec<String>) -> (i64, i64) {
+pub(crate) fn day04(lines: Vec<String>) -> FunctionOutput {
     let re = Regex::new(r"XMAS").unwrap();
     let partone = create_candidates(&lines)
         .iter()
@@ -36,7 +38,7 @@ pub(crate) fn day04(lines: Vec<String>) -> (i64, i64) {
             }
         }
     }
-    (partone, parttwo)
+    IntPair(partone, parttwo)
 }
 
 fn get_char(lines: &Vec<String>, row: i64, col: i64) -> Option<char> {
@@ -110,19 +112,19 @@ mod tests {
     #[test]
     fn test_day_04_partone_small() {
         let lines = read_testfile("day04testpartone.txt");
-        assert_eq!(day04(lines), (18, 9));
+        assert_eq!(day04(lines), IntPair(18, 9));
     }
 
     #[test]
     fn test_day_04_parttwo_small() {
         let lines = read_testfile("day04testparttwo.txt");
-        assert_eq!(day04(lines), (0, 9));
+        assert_eq!(day04(lines), IntPair(0, 9));
     }
 
     #[test]
     fn test_day_04() {
         let lines = read_testfile("day04.txt");
-        assert_eq!(day04(lines), (2685, 2048));
+        assert_eq!(day04(lines), IntPair(2685, 2048));
     }
 
     #[test]

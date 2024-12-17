@@ -1,4 +1,7 @@
-pub(crate) fn day02(lines: Vec<String>) -> (i64, i64) {
+use crate::FunctionOutput;
+use crate::FunctionOutput::IntPair;
+
+pub(crate) fn day02(lines: Vec<String>) -> FunctionOutput {
     let parsed: Vec<Vec<i64>> = lines
         .iter()
         .map(|l| {
@@ -9,7 +12,7 @@ pub(crate) fn day02(lines: Vec<String>) -> (i64, i64) {
         .collect();
     let partone = parsed.iter().filter(|&l| is_safe(l)).count() as i64;
     let parttwo = parsed.iter().filter(|&l| is_safe_with_dampener(l)).count() as i64;
-    (partone, parttwo)
+    IntPair(partone, parttwo)
 }
 
 fn is_safe(level: &Vec<i64>) -> bool {
@@ -41,12 +44,12 @@ mod tests {
     #[test]
     fn test_day_02_small() {
         let lines = read_testfile("day02test.txt");
-        assert_eq!(day02(lines), (2, 4));
+        assert_eq!(day02(lines), IntPair(2, 4));
     }
 
     #[test]
     fn test_day_02() {
         let lines = read_testfile("day02.txt");
-        assert_eq!(day02(lines), (246, 318));
+        assert_eq!(day02(lines), IntPair(246, 318));
     }
 }

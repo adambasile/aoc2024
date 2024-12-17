@@ -1,3 +1,5 @@
+use crate::FunctionOutput;
+use crate::FunctionOutput::IntPair;
 use std::collections::{HashMap, HashSet};
 
 type Plot = (i32, i32);
@@ -36,7 +38,7 @@ struct Stats {
 fn neighbours(&(h, w): &Plot) -> [Plot; 4] {
     [(h - 1, w), (h, w - 1), (h + 1, w), (h, w + 1)]
 }
-pub(crate) fn day12(lines: Vec<String>) -> (i64, i64) {
+pub(crate) fn day12(lines: Vec<String>) -> FunctionOutput {
     let plots = parse(lines);
     let region_map: HashMap<Plot, u32> = get_region_map(&plots);
     let region_stats = calculate_stats(&region_map);
@@ -50,7 +52,7 @@ pub(crate) fn day12(lines: Vec<String>) -> (i64, i64) {
         .iter()
         .map(|(region, stats)| stats.area * region_sides.get(region).unwrap())
         .sum::<u32>() as i64;
-    (partone, parttwo)
+    IntPair(partone, parttwo)
 }
 
 fn get_sides_per_region(region_map: &HashMap<Plot, u32>) -> HashMap<u32, u32> {
@@ -163,13 +165,13 @@ mod tests {
     #[test]
     fn test_day_12_small() {
         let lines = read_testfile("day12test.txt");
-        assert_eq!(day12(lines), (1930, 1206));
+        assert_eq!(day12(lines), IntPair(1930, 1206));
     }
 
     #[test]
     fn test_day_12() {
         let lines = read_testfile("day12.txt");
-        assert_eq!(day12(lines), (1533644, 936718));
+        assert_eq!(day12(lines), IntPair(1533644, 936718));
     }
 
     #[test]
@@ -179,8 +181,8 @@ mod tests {
             outside: (0, 0),
         };
         let expected = Border {
-            inside: (1, 1),
-            outside: (1, 0),
+            inside: (-1, 1),
+            outside: (-1, 0),
         };
         assert_eq!(border.next_straight(), expected);
     }
